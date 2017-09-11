@@ -68,7 +68,7 @@ def get_loader(dataDir, dataType):
     target_transform = Annotation_transform()
 
     data = datasets.CocoDetection(dataFolder, annFile, input_transform, target_transform)
-    loader = dataloader.DataLoader(data, batch_size=150, shuffle=True, num_workers=8)
+    loader = dataloader.DataLoader(data, batch_size=200, shuffle=True, num_workers=20)
     loader.dataset.train = True
     return loader
 
@@ -170,6 +170,6 @@ def main():
     model = load_model()
     loss_fn = nn.CrossEntropyLoss().type(data_type)
     optimizer = optim.Adam(model.parameters(), lr=1e-3)
-    train(model, loss_fn, optimizer, num_epochs=2)
+    train(model, loss_fn, optimizer, num_epochs=5)
 
 main()
