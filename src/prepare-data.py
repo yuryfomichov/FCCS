@@ -68,7 +68,7 @@ def get_loader(dataDir, dataType):
     target_transform = Annotation_transform()
 
     data = datasets.CocoDetection(dataFolder, annFile, input_transform, target_transform)
-    loader = dataloader.DataLoader(data, batch_size=250, shuffle=True, num_workers=250)
+    loader = dataloader.DataLoader(data, batch_size=150, shuffle=True, num_workers=8)
     loader.dataset.train = True
     return loader
 
@@ -137,7 +137,7 @@ def train(model, loss_fn, optimizer, num_epochs=1):
             scores = model(x_var)
 
             loss = loss_fn(scores, y_var)
-            if (t + 1) % 50 == 0:
+            if (t + 1) % 10 == 0:
                 print('t = %d, loss = %.4f' % (t + 1, loss.data[0]))
 
             optimizer.zero_grad()
