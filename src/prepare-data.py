@@ -67,7 +67,7 @@ def get_loader(dataDir, dataType):
     target_transform = Annotation_transform()
 
     data = datasets.CocoDetection(dataFolder, annFile, input_transform, target_transform)
-    loader = dataloader.DataLoader(data, batch_size=250, shuffle=True, num_workers=32)
+    loader = dataloader.DataLoader(data, batch_size=200, shuffle=True, num_workers=32)
     loader.dataset.train = True
     return loader
 
