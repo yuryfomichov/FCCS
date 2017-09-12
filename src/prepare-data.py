@@ -60,8 +60,8 @@ def get_loader(dataDir, dataType):
     dataFolder = '%s/%s/' %  (dataDir, dataType)
 
     input_transform = transforms.Compose([
-    transforms.Scale(256),
-    transforms.CenterCrop(256),
+    transforms.Scale(192),
+    transforms.CenterCrop(192),
     transforms.ToTensor()])
 
     target_transform = Annotation_transform()
@@ -107,7 +107,7 @@ def get_model():
         nn.Conv2d(256, 256, kernel_size=3, stride=1, padding=1),
         nn.BatchNorm2d(256),
         nn.ReLU(inplace=True),
-        nn.AvgPool2d(kernel_size=32, stride=1),
+        nn.AvgPool2d(kernel_size=24, stride=1),
         Flatten(),
         nn.Linear(256, 128),
         nn.BatchNorm1d(128),
