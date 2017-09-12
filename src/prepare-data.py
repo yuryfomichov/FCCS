@@ -80,14 +80,7 @@ def load_model():
 
 def get_model():
     simple_model = nn.Sequential(
-        nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1),
-        nn.BatchNorm2d(16),
-        nn.ReLU(inplace=True),
-        nn.Conv2d(16, 16, kernel_size=3, stride=1, padding=1),
-        nn.BatchNorm2d(16),
-        nn.ReLU(inplace=True),
-        nn.MaxPool2d(kernel_size=2, stride=2),
-        nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1),
+        nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1),
         nn.BatchNorm2d(32),
         nn.ReLU(inplace=True),
         nn.Conv2d(32, 32, kernel_size=3, stride=1, padding=1),
@@ -101,18 +94,25 @@ def get_model():
         nn.BatchNorm2d(64),
         nn.ReLU(inplace=True),
         nn.MaxPool2d(kernel_size=2, stride=2),
-        nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
-        nn.BatchNorm2d(64),
+        nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1),
+        nn.BatchNorm2d(128),
         nn.ReLU(inplace=True),
-        nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
-        nn.BatchNorm2d(64),
+        nn.Conv2d(128, 128, kernel_size=3, stride=1, padding=1),
+        nn.BatchNorm2d(128),
+        nn.ReLU(inplace=True),
+        nn.MaxPool2d(kernel_size=2, stride=2),
+        nn.Conv2d(128, 256, kernel_size=3, stride=1, padding=1),
+        nn.BatchNorm2d(256),
+        nn.ReLU(inplace=True),
+        nn.Conv2d(256, 256, kernel_size=3, stride=1, padding=1),
+        nn.BatchNorm2d(256),
         nn.ReLU(inplace=True),
         nn.MaxPool2d(kernel_size=2, stride=2),
         Flatten(),
-        nn.Linear(4096, 128),
-        nn.BatchNorm1d(128),
+        nn.Linear(16384, 256),
+        nn.BatchNorm1d(256),
         nn.ReLU(inplace=True),
-        nn.Linear(128, 91)
+        nn.Linear(256, 91)
     )
 
     simple_model = simple_model.type(data_type)
@@ -166,9 +166,9 @@ def check_accuracy(model, loader):
 
 
 def main():
-    model = load_model()
+    model = get_model()
     loss_fn = nn.CrossEntropyLoss().type(data_type)
-    optimizer = optim.Adam(model.parameters(), lr=1e-4)
+    optimizer = optim.Adam(model.parameters(), lr=1e-2)
     train(model, loss_fn, optimizer, num_epochs=3)
 
 main()
