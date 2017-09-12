@@ -107,19 +107,12 @@ def get_model():
         nn.Conv2d(256, 256, kernel_size=3, stride=1, padding=1),
         nn.BatchNorm2d(256),
         nn.ReLU(inplace=True),
-        nn.MaxPool2d(kernel_size=2, stride=2),
-        nn.Conv2d(256, 512, kernel_size=3, stride=1, padding=1),
-        nn.BatchNorm2d(512),
-        nn.ReLU(inplace=True),
-        nn.Conv2d(512, 512, kernel_size=3, stride=1, padding=1),
-        nn.BatchNorm2d(512),
-        nn.ReLU(inplace=True),
-        nn.AvgPool2d(kernel_size=16, stride=1),
+        nn.AvgPool2d(kernel_size=32, stride=1),
         Flatten(),
-        nn.Linear(512, 256),
-        nn.BatchNorm1d(256),
+        nn.Linear(256, 128),
+        nn.BatchNorm1d(128),
         nn.ReLU(inplace=True),
-        nn.Linear(256, 91)
+        nn.Linear(128, 91)
     )
 
     simple_model = simple_model.type(data_type)
