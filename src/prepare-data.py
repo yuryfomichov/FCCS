@@ -60,14 +60,14 @@ def get_loader(dataDir, dataType):
     dataFolder = '%s/%s/' %  (dataDir, dataType)
 
     input_transform = transforms.Compose([
-    transforms.Scale(128),
-    transforms.CenterCrop(128),
+    transforms.Scale(256),
+    transforms.CenterCrop(256),
     transforms.ToTensor()])
 
     target_transform = Annotation_transform()
 
     data = datasets.CocoDetection(dataFolder, annFile, input_transform, target_transform)
-    loader = dataloader.DataLoader(data, batch_size=200, shuffle=True, num_workers=32)
+    loader = dataloader.DataLoader(data, batch_size=250, shuffle=True, num_workers=32)
     loader.dataset.train = True
     return loader
 
@@ -108,8 +108,15 @@ def get_model():
         nn.BatchNorm2d(256),
         nn.ReLU(inplace=True),
         nn.MaxPool2d(kernel_size=2, stride=2),
+        nn.Conv2d(256, 512, kernel_size=3, stride=1, padding=1),
+        nn.BatchNorm2d(512),
+        nn.ReLU(inplace=True),
+        nn.Conv2d(512, 512, kernel_size=3, stride=1, padding=1),
+        nn.BatchNorm2d(512),
+        nn.ReLU(inplace=True),
+        nn.AvgPool2d(kernel_size=16, stride=1),
         Flatten(),
-        nn.Linear(16384, 256),
+        nn.Linear(512, 256),
         nn.BatchNorm1d(256),
         nn.ReLU(inplace=True),
         nn.Linear(256, 91)
@@ -166,9 +173,10 @@ def check_accuracy(model, loader):
 
 
 def main():
-    model = load_model()
+    model = get_model()
     loss_fn = nn.CrossEntropyLoss().type(data_type)
-    train(model, loss_fn, optim.Adam(model.parameters(), lr=1e-2), num_epochs=2)
-    train(model, loss_fn, optim.Adam(model.parameters(), lr=1e-3), num_epochs=5)
+    train(model, loss_fn, optim.Adam(model.parameters(), lr=1e-2), num_epochs=3)
+    train(model, loss_fn, optim.Adam(model.parameters(), lr=1e-3), num_epochs=3)
+    train(model, loss_fn, optim.Adam(model.parameters(), lr=1e-4), num_epochs=3)
 
 main()
