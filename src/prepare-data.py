@@ -168,7 +168,7 @@ def check_accuracy(model, loader):
 def main():
     model = load_model()
     loss_fn = nn.CrossEntropyLoss().type(data_type)
-    train(model, loss_fn, optim.Adam(model.parameters(), lr=1e-3), num_epochs=3)
-    train(model, loss_fn, optim.Adam(model.parameters(), lr=1e-4), num_epochs=3)
+    train(model, loss_fn, optim.Adam(model.parameters(), lr=1e-4), num_epochs=2)
+    train(model, loss_fn, optim.Adam(model.parameters(), lr=1e-5), num_epochs=2)
 
 main()
