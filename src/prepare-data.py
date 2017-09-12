@@ -157,7 +157,7 @@ def check_accuracy(model, loader):
         x_var = Variable(x.type(data_type), volatile=True)
 
         scores = model(x_var)
-        _, preds = scores.data.cpu().max(1)
+        _, preds = scores.data.cuda().max(1)
         num_correct += (preds == y).sum()
         num_samples += preds.size(0)
 
@@ -166,7 +166,7 @@ def check_accuracy(model, loader):
 
 
 def main():
-    model = load_model()
+    model = get_model()
     loss_fn = nn.CrossEntropyLoss().type(data_type)
     optimizer = optim.Adam(model.parameters(), lr=1e-3)
     train(model, loss_fn, optimizer, num_epochs=5)
