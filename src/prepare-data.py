@@ -14,8 +14,7 @@ class Flatten(nn.Module):
         N, C, H, W = x.size() # read in N, C, H, W
         return x.view(N, -1)
 
-data_type = torch.FloatTensor
-
+data_type = torch.cuda.FloatTensor
 
 def test_transform(dataDir, dataType):
     annFile = '%s/annotations/instances_%s.json' % (dataDir, dataType)
@@ -68,7 +67,7 @@ def get_loader(dataDir, dataType):
     target_transform = Annotation_transform()
 
     data = datasets.CocoDetection(dataFolder, annFile, input_transform, target_transform)
-    loader = dataloader.DataLoader(data, batch_size=200, shuffle=True, num_workers=20)
+    loader = dataloader.DataLoader(data, batch_size=200, shuffle=True, num_workers=32)
     loader.dataset.train = True
     return loader
 
