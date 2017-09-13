@@ -63,6 +63,7 @@ def get_loader(dataDir, dataType):
     input_transform = transforms.Compose([
     transforms.Scale(256),
     transforms.RandomCrop(224),
+    transforms.RandomHorizontalFlip(),
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.485, 0.456, 0.406],
                          std=[0.229, 0.224, 0.225])])
@@ -70,7 +71,7 @@ def get_loader(dataDir, dataType):
     target_transform = Annotation_transform()
 
     data = datasets.CocoDetection(dataFolder, annFile, input_transform, target_transform)
-    loader = dataloader.DataLoader(data, batch_size=200, shuffle=True, num_workers=32, pin_memory=True)
+    loader = dataloader.DataLoader(data, batch_size=250, shuffle=True, num_workers=32, pin_memory=True)
     loader.dataset.train = True
     return loader
 
