@@ -4,6 +4,7 @@ import torchvision.datasets as datasets
 import torch.utils.data.dataloader as dataloader
 import torch as torch
 import torch.nn as nn
+import torchvision.models as models
 import torch.optim as optim
 from torch.autograd import Variable
 import numpy as np
@@ -60,8 +61,8 @@ def get_loader(dataDir, dataType):
     dataFolder = '%s/%s/' %  (dataDir, dataType)
 
     input_transform = transforms.Compose([
-    transforms.Scale(200),
-    transforms.RandomCrop(192),
+    transforms.Scale(256),
+    transforms.RandomCrop(224),
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.485, 0.456, 0.406],
                          std=[0.229, 0.224, 0.225])])
@@ -81,44 +82,45 @@ def load_model():
 
 
 def get_model():
-    simple_model = nn.Sequential(
-        nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1),
-        nn.BatchNorm2d(32),
-        nn.ReLU(inplace=True),
-        nn.Conv2d(32, 32, kernel_size=3, stride=1, padding=1),
-        nn.BatchNorm2d(32),
-        nn.ReLU(inplace=True),
-        nn.MaxPool2d(kernel_size=2, stride=2),
-        nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),
-        nn.BatchNorm2d(64),
-        nn.ReLU(inplace=True),
-        nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
-        nn.BatchNorm2d(64),
-        nn.ReLU(inplace=True),
-        nn.MaxPool2d(kernel_size=2, stride=2),
-        nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1),
-        nn.BatchNorm2d(128),
-        nn.ReLU(inplace=True),
-        nn.Conv2d(128, 128, kernel_size=3, stride=1, padding=1),
-        nn.BatchNorm2d(128),
-        nn.ReLU(inplace=True),
-        nn.MaxPool2d(kernel_size=2, stride=2),
-        nn.Conv2d(128, 256, kernel_size=3, stride=1, padding=1),
-        nn.BatchNorm2d(256),
-        nn.ReLU(inplace=True),
-        nn.Conv2d(256, 256, kernel_size=3, stride=1, padding=1),
-        nn.BatchNorm2d(256),
-        nn.ReLU(inplace=True),
-        nn.AvgPool2d(kernel_size=24, stride=1),
-        Flatten(),
-        nn.Linear(256, 128),
-        nn.BatchNorm1d(128),
-        nn.ReLU(inplace=True),
-        nn.Linear(128, 91)
-    )
+    model = models.resnet18()
+    # simple_model = nn.Sequential(
+    #     nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1),
+    #     nn.BatchNorm2d(32),
+    #     nn.ReLU(inplace=True),
+    #     nn.Conv2d(32, 32, kernel_size=3, stride=1, padding=1),
+    #     nn.BatchNorm2d(32),
+    #     nn.ReLU(inplace=True),
+    #     nn.MaxPool2d(kernel_size=2, stride=2),
+    #     nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),
+    #     nn.BatchNorm2d(64),
+    #     nn.ReLU(inplace=True),
+    #     nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
+    #     nn.BatchNorm2d(64),
+    #     nn.ReLU(inplace=True),
+    #     nn.MaxPool2d(kernel_size=2, stride=2),
+    #     nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1),
+    #     nn.BatchNorm2d(128),
+    #     nn.ReLU(inplace=True),
+    #     nn.Conv2d(128, 128, kernel_size=3, stride=1, padding=1),
+    #     nn.BatchNorm2d(128),
+    #     nn.ReLU(inplace=True),
+    #     nn.MaxPool2d(kernel_size=2, stride=2),
+    #     nn.Conv2d(128, 256, kernel_size=3, stride=1, padding=1),
+    #     nn.BatchNorm2d(256),
+    #     nn.ReLU(inplace=True),
+    #     nn.Conv2d(256, 256, kernel_size=3, stride=1, padding=1),
+    #     nn.BatchNorm2d(256),
+    #     nn.ReLU(inplace=True),
+    #     nn.AvgPool2d(kernel_size=24, stride=1),
+    #     Flatten(),
+    #     nn.Linear(256, 128),
+    #     nn.BatchNorm1d(128),
+    #     nn.ReLU(inplace=True),
+    #     nn.Linear(128, 91)
+    # )
 
-    simple_model = simple_model.type(data_type)
-    return simple_model
+    model = model.type(data_type)
+    return model
 
 def convert_tensor_to_image(tensor):
     preprocess2 = transforms.Compose([transforms.ToPILImage()])
@@ -170,7 +172,7 @@ def check_accuracy(model, loader):
 def main():
     model = load_model()
     loss_fn = nn.CrossEntropyLoss().type(data_type)
-    train(model, loss_fn, optim.Adam(model.parameters(), lr=1e-5), num_epochs=1)
-    train(model, loss_fn, optim.Adam(model.parameters(), lr=1e-6), num_epochs=1)
+    train(model, loss_fn, optim.Adam(model.parameters(), lr=1e-2), num_epochs=1)
+    train(model, loss_fn, optim.Adam(model.parameters(), lr=1e-3), num_epochs=1)
 
 main()
