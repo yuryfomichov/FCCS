@@ -71,7 +71,7 @@ def get_loader(dataDir, dataType):
     target_transform = Annotation_transform()
 
     data = datasets.CocoDetection(dataFolder, annFile, input_transform, target_transform)
-    loader = dataloader.DataLoader(data, batch_size=256, shuffle=True, num_workers=32, pin_memory=True)
+    loader = dataloader.DataLoader(data, batch_size=300, shuffle=True, num_workers=32, pin_memory=True)
     loader.dataset.train = True
     return loader
 
@@ -173,7 +173,7 @@ def check_accuracy(model, loader):
 def main():
     model = get_model()
     loss_fn = nn.CrossEntropyLoss().type(data_type)
-    train(model, loss_fn, optim.Adam(model.parameters(), lr=1e-2), num_epochs=1)
-    train(model, loss_fn, optim.Adam(model.parameters(), lr=1e-3), num_epochs=1)
+    train(model, loss_fn, optim.Adam(model.parameters(), lr=1e-4), num_epochs=1)
+    train(model, loss_fn, optim.Adam(model.parameters(), lr=1e-5), num_epochs=1)
 
 main()
