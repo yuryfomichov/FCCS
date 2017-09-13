@@ -46,7 +46,7 @@ class NetworkModel(object):
         return model
 
     def save_model(self):
-        torch.save(self.model_filename)
+        torch.save(self.model, self.model_filename)
 
     def load_model(self):
         return torch.load(self.model_filename)
