@@ -71,7 +71,7 @@ def get_loader(dataDir, dataType):
     target_transform = Annotation_transform()
 
     data = datasets.CocoDetection(dataFolder, annFile, input_transform, target_transform)
-    loader = dataloader.DataLoader(data, batch_size=128, shuffle=True, num_workers=32, pin_memory=True)
+    loader = dataloader.DataLoader(data, batch_size=200, shuffle=True, num_workers=32, pin_memory=True)
     loader.dataset.train = True
     return loader
 
@@ -83,7 +83,10 @@ def load_model():
 
 
 def get_model():
-    model = models.resnet18()
+    model = nn.Sequential(
+        models.resnet18(),
+        nn.Linear(1000, 91)
+    )
     # simple_model = nn.Sequential(
     #     nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1),
     #     nn.BatchNorm2d(32),
