@@ -43,12 +43,16 @@ class NetworkModel(object):
             nn.BatchNorm2d(128),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2, stride=2),
-            nn.Conv2d(128, 64, kernel_size=3, stride=1, padding=1),
-            nn.BatchNorm2d(64),
+            nn.Conv2d(128, 192, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(192),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Conv2d(192, 128, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(128),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2, stride=2),
             Flatten(),
-            nn.Linear(9216, 256),
+            nn.Linear(128*6*6, 256),
             nn.BatchNorm1d(256),
             nn.ReLU(inplace=True),
             nn.Linear(256, 91))
@@ -66,8 +70,8 @@ class NetworkModel(object):
             print('')
             print('--------------------------------------------------------------------------------------------------')
             print('Starting epoch %d / %d' % (epoch + 1, num_epochs))
-            self.model.train()
             tic = time.time()
+            self.model.train()
             for t, (x, y) in enumerate(self.loader.get_train_loader()):
                 x_var = Variable(x.type(self.data_type))
                 y_var = Variable(y.type(self.data_type).long())
