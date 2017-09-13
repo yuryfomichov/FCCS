@@ -1,7 +1,7 @@
 import torch as torch
 import torch.nn as nn
 import torch.optim as optim
-from src.model.model import NetworkModel
+from model.model import NetworkModel
 
 def run():
     network = NetworkModel(data_type=torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor,
