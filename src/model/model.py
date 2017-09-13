@@ -1,6 +1,8 @@
 import torch as torch
+import torch.nn as nn
 import torchvision.models as models
 import time
+from .customlayers.flatten import Flatten
 from .datasetloader import DatasetLoader
 from torch.autograd import Variable
 
@@ -15,34 +17,37 @@ class NetworkModel(object):
 
     def init(self):
         if self.create_new:
+            print('Model was loaded from file')
             self.model = self.init_model()
         else:
-            self.model = self.load_model()
+            try:
+                print('New model was created')
+                self.model = self.load_model();
+            except:
+                print('No model had been found. New model was created')
+                self.model = self.init_model()
 
     def init_model(self):
-        model = models.resnet18(num_classes=91)
-        # simple_model = nn.Sequential(
-        #     nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1),
-        #     nn.BatchNorm2d(32),
-        #     nn.ReLU(inplace=True),
-        #     nn.Conv2d(32, 32, kernel_size=3, stride=1, padding=1),
-        #     nn.BatchNorm2d(32),
-        #     nn.ReLU(inplace=True),
-        #     nn.MaxPool2d(kernel_size=2, stride=2),
-        #     nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),
-        #     nn.BatchNorm2d(64),
-        #     nn.ReLU(inplace=True),
-        #     nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
-        #     nn.BatchNorm2d(64),
-        #     nn.ReLU(inplace=True),
-        #     nn.MaxPool2d(kernel_size=2, stride=2),
-        #     Flatten(),
-        #     nn.Linear(256, 128),
-        #     nn.BatchNorm1d(128),
-        #     nn.ReLU(inplace=True),
-        #     nn.Linear(128, 91)
-        # )
-
+        model = nn.Sequential(
+            nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(32),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(32, 32, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(32),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(64),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(64),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            Flatten(),
+            nn.Linear(16384, 128),
+            nn.BatchNorm1d(128),
+            nn.ReLU(inplace=True),
+            nn.Linear(128, 91))
         model = model.type(self.data_type)
         return model
 
@@ -74,26 +79,34 @@ class NetworkModel(object):
             print('Epoch done in t={:0.1f}s'.format(time.time()- tic))
             self.save_model()
             self.check_val_accuracy()
+            self.check_train_accuracy()
+
+    def check_train_accuracy(self):
+        print('Checking accuracy on TRAIN set')
+        return self.check_accuracy(self.loader.get_train_loader(), 5000)
 
     def check_val_accuracy(self):
-        print('Checking accuracy on Validation set')
-        self.check_accuracy(self.loader.get_val_loader())
+        print('Checking accuracy on VALIDATION set')
+        return self.check_accuracy(self.loader.get_val_loader())
 
     def check_test_accuracy(self):
-        print('Checking accuracy on Test set')
-        self.check_accuracy(self.loader.get_test_loader())
+        print('Checking accuracy on TEST set')
+        return self.check_accuracy(self.loader.get_test_loader())
 
-    def check_accuracy(self, loader):
+    def check_accuracy(self, loader, stop_on=-1):
         num_correct = 0
         num_samples = 0
         self.model.eval()
         for x, y in loader:
             x_var = Variable(x.type(self.data_type), volatile=True)
-
             scores = self.model(x_var)
             _, preds = scores.data.cpu().max(1)
             num_correct += (preds == y).sum()
             num_samples += preds.size(0)
 
+            if (stop_on >= 0 and num_samples > stop_on):
+                break;
+
         acc = float(num_correct) / num_samples
         print('Got %d / %d correct (%.2f)' % (num_correct, num_samples, 100 * acc))
+        return acc;

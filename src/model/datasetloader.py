@@ -11,12 +11,14 @@ class DatasetLoader(object):
         self.test_dir = 'test2017'
         self.batch_size = params.get("batch_size", 200)
         self.num_workers = params.get("num_workers", 32)
+        self.cache = {}
 
     def get_loader(self, dataType):
         annFile = '%s/annotations/instances_%s.json' % (self.data_dir, dataType)
         dataFolder = '%s/%s/' % (self.data_dir, dataType)
 
-        data = datasets.CocoDetection(dataFolder, annFile, self.input_transform(), self.target_transform)
+        data = self.cache.get(annFile, datasets.CocoDetection(dataFolder, annFile, self.input_transform(), self.target_transform));
+        self.cache[annFile] = data;
         loader = dataloader.DataLoader(data,
                                        batch_size=self.batch_size,
                                        shuffle=True,
@@ -42,8 +44,8 @@ class DatasetLoader(object):
 
     def input_transform(self):
         transform = transforms.Compose([
-            transforms.Scale(256),
-            transforms.RandomCrop(224),
+            transforms.Scale(80),
+            transforms.RandomCrop(64),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.485, 0.456, 0.406],
