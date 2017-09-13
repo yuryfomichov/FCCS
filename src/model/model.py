@@ -6,8 +6,10 @@ from .customlayers.flatten import Flatten
 from .datasetloader import DatasetLoader
 from torch.autograd import Variable
 
+
 class NetworkModel(object):
-    def __init__(self, data_type=torch.cuda.FloatTensor, model_filename='model.pt', create_new=False, print_every=10, loader_params={}):
+    def __init__(self, data_type=torch.cuda.FloatTensor, model_filename='model.pt', create_new=False, print_every=10,
+                 loader_params={}):
         self.data_type = data_type
         self.model_filename = model_filename
         self.create_new = create_new
@@ -76,7 +78,7 @@ class NetworkModel(object):
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
-            print('Epoch done in t={:0.1f}s'.format(time.time()- tic))
+            print('Epoch done in t={:0.1f}s'.format(time.time() - tic))
             self.save_model()
             self.check_val_accuracy()
             self.check_train_accuracy()
