@@ -21,7 +21,7 @@ class DatasetLoader(object):
         data = self.cache.get(annFile)
         if data is None:
             data = datasets.CocoDetection(dataFolder, annFile, self.input_transform(), self.target_transform)
-            self.cache['annFile'] = data
+            self.cache[annFile] = data
 
         loader = dataloader.DataLoader(data,
                                        batch_size=self.batch_size,
