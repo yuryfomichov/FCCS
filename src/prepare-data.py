@@ -83,10 +83,7 @@ def load_model():
 
 
 def get_model():
-    model = nn.Sequential(
-        models.resnet18(),
-        nn.Linear(1000, 91)
-    )
+    model = models.resnet18();
     # simple_model = nn.Sequential(
     #     nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1),
     #     nn.BatchNorm2d(32),
