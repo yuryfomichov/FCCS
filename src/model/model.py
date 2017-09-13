@@ -17,11 +17,11 @@ class NetworkModel(object):
 
     def init(self):
         if self.create_new:
-            print('Model was loaded from file')
+            print('New model was created')
             self.model = self.init_model()
         else:
             try:
-                print('New model was created')
+                print('Model was loaded from file')
                 self.model = self.load_model();
             except:
                 print('No model had been found. New model was created')
