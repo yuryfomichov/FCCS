@@ -71,7 +71,7 @@ def get_loader(dataDir, dataType):
     target_transform = Annotation_transform()
 
     data = datasets.CocoDetection(dataFolder, annFile, input_transform, target_transform)
-    loader = dataloader.DataLoader(data, batch_size=128, shuffle=True, num_workers=32, pin_memory=True)
+    loader = dataloader.DataLoader(data, batch_size=256, shuffle=True, num_workers=32, pin_memory=True)
     loader.dataset.train = True
     return loader
 
@@ -83,7 +83,7 @@ def load_model():
 
 
 def get_model():
-    model = models.resnet18();
+    model = models.resnet18(num_classes=91)
     # simple_model = nn.Sequential(
     #     nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1),
     #     nn.BatchNorm2d(32),
@@ -171,7 +171,7 @@ def check_accuracy(model, loader):
 
 
 def main():
-    model = load_model()
+    model = get_model()
     loss_fn = nn.CrossEntropyLoss().type(data_type)
     train(model, loss_fn, optim.Adam(model.parameters(), lr=1e-2), num_epochs=1)
     train(model, loss_fn, optim.Adam(model.parameters(), lr=1e-3), num_epochs=1)
