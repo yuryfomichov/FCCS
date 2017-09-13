@@ -27,6 +27,7 @@ class DatasetLoader(object):
                                        batch_size=self.batch_size,
                                        shuffle=True,
                                        num_workers=self.num_workers,
+                                       drop_last=True,
                                        pin_memory=torch.cuda.is_available())
         return loader
 
@@ -48,8 +49,8 @@ class DatasetLoader(object):
 
     def input_transform(self):
         transform = transforms.Compose([
-            transforms.Scale(80),
-            transforms.RandomCrop(64),
+            transforms.Scale(224),
+            transforms.RandomCrop(192),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.485, 0.456, 0.406],
