@@ -54,6 +54,8 @@ class NetworkModel(object):
 
     def train(self, loss_fn, optimizer, num_epochs=1):
         for epoch in range(num_epochs):
+            print('')
+            print('--------------------------------------------------------------------------------------------------')
             print('Starting epoch %d / %d' % (epoch + 1, num_epochs))
             self.model.train()
             tic = time.time()
