@@ -1,5 +1,6 @@
 import torch as torch
 import torchvision.models as models
+import time
 from .datasetloader import DatasetLoader
 from torch.autograd import Variable
 
@@ -55,19 +56,20 @@ class NetworkModel(object):
         for epoch in range(num_epochs):
             print('Starting epoch %d / %d' % (epoch + 1, num_epochs))
             self.model.train()
+            tic = time.time()
             for t, (x, y) in enumerate(self.loader.get_train_loader()):
                 x_var = Variable(x.type(self.data_type))
                 y_var = Variable(y.type(self.data_type).long())
-
                 scores = self.model(x_var)
-
                 loss = loss_fn(scores, y_var)
+
                 if (t + 1) % self.print_every == 0:
                     print('t = %d, loss = %.4f' % (t + 1, loss.data[0]))
 
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
+            print('Epoch done in t={:0.1f}s'.format(time.time()- tic))
             self.save_model()
             self.check_val_accuracy()
 
