@@ -2,13 +2,14 @@ import torch.nn as nn
 import torchvision.models as models
 import math
 
-class Model(nn.Module):
 
+class Model(nn.Module):
     def __init__(self, num_classes=91):
         super(Model, self).__init__()
         vgg = models.vgg16(pretrained=True)
         self.features = vgg.features
         self._require_grad_false()
+
         self.classifier = nn.Sequential(
             nn.Linear(512 * 7 * 7, 1024),
             nn.BatchNorm1d(1024),
@@ -40,5 +41,4 @@ class Model(nn.Module):
 
     def _require_grad_false(self):
         for p in self.features.parameters():
-                p.requires_grad = False
-
+            p.requires_grad = False

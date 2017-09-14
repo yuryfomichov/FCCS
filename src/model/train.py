@@ -1,9 +1,9 @@
 import torch as torch
-import torch.nn as nn
 import time
 from .model import Model
 from .datasetloader import DatasetLoader
 from torch.autograd import Variable
+
 
 class Train(object):
     def __init__(self, data_type=torch.cuda.FloatTensor, model_filename='model.pt', create_new=False, print_every=10,
@@ -16,27 +16,25 @@ class Train(object):
         self.loader = DatasetLoader(loader_params)
 
     def init(self):
+        self.init_model()
         if self.create_new:
             print('New model was created')
-            self.model = self.init_model()
         else:
             try:
+                self.load_model()
                 print('Model was loaded from file')
-                self.model = self.load_model();
             except:
                 print('No model had been found. New model was created')
-                self.model = self.init_model()
 
     def init_model(self):
-        model = Model()
-        model = model.type(self.data_type)
-        return model
+        self.model = Model()
+        self.model = self.model.type(self.data_type)
 
     def save_model(self):
-        torch.save(self.model, self.model_filename)
+        torch.save(self.model.state_dict(), self.model_filename)
 
     def load_model(self):
-        return torch.load(self.model_filename)
+        self.model.load_state_dict(torch.load(self.model_filename))
 
     def train(self, loss_fn, optimizer, num_epochs=1):
         for epoch in range(num_epochs):
@@ -64,7 +62,7 @@ class Train(object):
 
     def check_train_accuracy(self):
         print('Checking accuracy on TRAIN set')
-        return self.check_accuracy(self.loader.get_train_loader(), 5000)
+        return self.check_accuracy(self.loader.get_train_loader(False), 5000)
 
     def check_val_accuracy(self):
         print('Checking accuracy on VALIDATION set')

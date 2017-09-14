@@ -14,7 +14,7 @@ class DatasetLoader(object):
         self.num_workers = params.get("num_workers", 32)
         self.cache = {}
 
-    def get_loader(self, dataType):
+    def get_loader(self, dataType, drop_last = False):
         annFile = '%s/annotations/instances_%s.json' % (self.data_dir, dataType)
         dataFolder = '%s/%s/' % (self.data_dir, dataType)
 
@@ -27,12 +27,12 @@ class DatasetLoader(object):
                                        batch_size=self.batch_size,
                                        shuffle=True,
                                        num_workers=self.num_workers,
-                                       drop_last=True,
+                                       drop_last=drop_last,
                                        pin_memory=torch.cuda.is_available())
         return loader
 
-    def get_train_loader(self):
-        return self.get_loader(self.train_dir)
+    def get_train_loader(self, drop_last = True):
+        return self.get_loader(self.train_dir, drop_last)
 
     def get_val_loader(self):
         return self.get_loader(self.val_dir)
