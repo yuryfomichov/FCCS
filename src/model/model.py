@@ -12,12 +12,7 @@ class Model(nn.Module):
         #self._require_grad_false()
 
         self.classifier = nn.Sequential(
-            nn.MaxPool2d(kernel_size=2, stride= 1),
-            nn.MaxPool2d(kernel_size=2, stride=1),
-            nn.MaxPool2d(kernel_size=2, stride=1),
-            nn.MaxPool2d(kernel_size=2, stride=1),
-            Flatten(),
-            nn.Linear(3 * 14 * 14, 100),
+            nn.Linear(3 * 32 * 32, 100),
             nn.BatchNorm1d(100),
             nn.ReLU(True),
             nn.Linear(100, num_classes))
@@ -25,7 +20,7 @@ class Model(nn.Module):
 
     def forward(self, x):
         #x = self.features(x)
-        #x = x.view(x.size(0), -1)
+        x = x.view(x.size(0), -1)
         x = self.classifier(x)
         return x
 
