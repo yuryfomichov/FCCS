@@ -1,25 +1,25 @@
 import torch.nn as nn
 import torchvision.models as models
-from .customlayers.flatten import Flatten
 import math
 
 
 class Model(nn.Module):
     def __init__(self, num_classes=91):
         super(Model, self).__init__()
-        #vgg = models.vgg16(pretrained=True)
-        #self.features = vgg.features
-        #self._require_grad_false()
+        vgg = models.vgg16(pretrained=True)
+        self.features = vgg.features
+        self._require_grad_false()
 
         self.classifier = nn.Sequential(
-            nn.Linear(3 * 32 * 32, 100),
-            nn.BatchNorm1d(100),
+            nn.Linear(512 * 7 * 7, 1024),
+            nn.BatchNorm1d(1024),
             nn.ReLU(True),
-            nn.Linear(100, num_classes))
+            nn.Linear(1024, num_classes),
+        )
         self._initialize_weights()
 
     def forward(self, x):
-        #x = self.features(x)
+        x = self.features(x)
         x = x.view(x.size(0), -1)
         x = self.classifier(x)
         return x
