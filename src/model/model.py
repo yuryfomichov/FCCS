@@ -13,7 +13,7 @@ class Model(nn.Module):
             nn.Linear(512 * 7 * 7, 1024),
             nn.BatchNorm1d(1024),
             nn.ReLU(True),
-            nn.Linear(4096, num_classes),
+            nn.Linear(1024, num_classes),
         )
         self._initialize_weights()
 

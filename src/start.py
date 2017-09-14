@@ -10,10 +10,10 @@ def run():
                     create_new=True,
                     print_every=20,
                     loader_params={
-                         'batch_size': 192,
+                         'batch_size': 256,
                          'num_workers': 32 if torch.cuda.is_available() else 0
                     })
     loss_fn = nn.CrossEntropyLoss().type(network.data_type)
-    network.train(loss_fn, optim.Adam(network.model.parameters(),lr=1e-3), num_epochs=1)
+    network.train(loss_fn, optim.Adam(network.model.classifier.parameters(),lr=1e-3), num_epochs=1)
 
 run()
