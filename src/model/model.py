@@ -11,10 +11,10 @@ class Model(nn.Module):
         #self._require_grad_false()
 
         self.classifier = nn.Sequential(
-            nn.Linear(512 * 7 * 7, 1024),
-            nn.BatchNorm1d(1024),
+            nn.Linear(3 * 224 * 224, 91),
+            nn.BatchNorm1d(91),
             nn.ReLU(True),
-            nn.Linear(1024, num_classes),
+            nn.Linear(91, num_classes),
         )
         self._initialize_weights()
 
