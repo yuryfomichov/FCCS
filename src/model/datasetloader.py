@@ -43,8 +43,7 @@ class DatasetLoader(object):
     def target_transform(self, annotation):
         result = 0
         if (len(annotation) > 0):
-            result = max(list(map(lambda x: (x['area'], x['category_id']), annotation)), key=lambda item: item[0])[
-                1]
+            result = max(list(map(lambda x: (x['area'], x['category_id']), annotation)), key=lambda item: item[0])[1]
         return result
 
     def input_transform(self):
