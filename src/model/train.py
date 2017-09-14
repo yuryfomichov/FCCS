@@ -47,7 +47,7 @@ class Train(object):
             self.model.train()
             for t, (x, y) in enumerate(self.loader.get_train_loader()):
                 x_var = Variable(x.type(self.data_type), requires_grad=False)
-                y_var = Variable(y.type(self.data_type).long(), requires_grad=False)
+                y_var = Variable(y.type(self.data_type).long())
                 scores = self.model(x_var)
                 loss = loss_fn(scores, y_var)
 
