@@ -1,5 +1,6 @@
 import torch.nn as nn
 import torchvision.models as models
+from .customlayers.flatten import Flatten
 import math
 
 
@@ -15,16 +16,16 @@ class Model(nn.Module):
             nn.MaxPool2d(kernel_size=2, stride=1),
             nn.MaxPool2d(kernel_size=2, stride=1),
             nn.MaxPool2d(kernel_size=2, stride=1),
+            Flatten(),
             nn.Linear(3 * 14 * 14, 100),
             nn.BatchNorm1d(100),
             nn.ReLU(True),
-            nn.Linear(100, num_classes),
-        )
+            nn.Linear(100, num_classes))
         self._initialize_weights()
 
     def forward(self, x):
         #x = self.features(x)
-        x = x.view(x.size(0), -1)
+        #x = x.view(x.size(0), -1)
         x = self.classifier(x)
         return x
 
