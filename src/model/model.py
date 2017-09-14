@@ -11,10 +11,14 @@ class Model(nn.Module):
         #self._require_grad_false()
 
         self.classifier = nn.Sequential(
-            nn.Linear(3 * 224 * 224, 91),
-            nn.BatchNorm1d(91),
+            nn.MaxPool2d(kernel_size=2, stride= 1),
+            nn.MaxPool2d(kernel_size=2, stride=1),
+            nn.MaxPool2d(kernel_size=2, stride=1),
+            nn.MaxPool2d(kernel_size=2, stride=1),
+            nn.Linear(3 * 14 * 14, 100),
+            nn.BatchNorm1d(100),
             nn.ReLU(True),
-            nn.Linear(91, num_classes),
+            nn.Linear(100, num_classes),
         )
         self._initialize_weights()
 
