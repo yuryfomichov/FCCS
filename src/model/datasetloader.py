@@ -65,7 +65,7 @@ class ToCudaTensor(object):
     """
 
     def __call__(self, pic):
-        img = torch.cuda.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
+        img = torch.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
         if pic.mode == 'YCbCr':
             nchannel = 3
         elif pic.mode == 'I;16':
@@ -74,4 +74,4 @@ class ToCudaTensor(object):
             nchannel = len(pic.mode)
         img = img.view(pic.size[1], pic.size[0], nchannel)
         img = img.transpose(0, 1).transpose(0, 2).contiguous()
-        return img.float().div(255)
+        return img.cuda().float().div(255)
