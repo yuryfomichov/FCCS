@@ -52,8 +52,8 @@ class Train(object):
                 read_data_time += (time.time() - read_data_tic);
 
                 convert_to_CUDA_tic = time.time()
-                x_var = Variable(x, requires_grad=False)
-                y_var = Variable(y)
+                x_var = Variable(x, requires_grad=False).cuda(async=True)
+                y_var = Variable(y).cuda(async=True)
                 convert_to_CUDA_time += (time.time() - convert_to_CUDA_tic);
 
                 forward_time_tic = time.time()
