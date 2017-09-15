@@ -46,15 +46,23 @@ class Train(object):
             read_data_tic = time.time()
             read_data_time = 0
             forward_time = 0
-            convert_to_CUDA_time = 0
+            convert_to_CUDA1_time = 0
+            convert_to_CUDA2_time = 0
             backward_time = 0
             for t, (x, y) in enumerate(self.loader.get_train_loader()):
                 read_data_time += (time.time() - read_data_tic)
 
-                convert_to_CUDA_tic = time.time()
-                x_var = Variable(x.type(self.data_type), requires_grad=False)
-                y_var = Variable(y.type(self.data_type).long())
-                convert_to_CUDA_time += (time.time() - convert_to_CUDA_tic)
+                convert_to_CUDA1_tic = time.time()
+                x_var = Variable(x, requires_grad=False)
+                y_var = Variable(y).long()
+                convert_to_CUDA1_time += (time.time() - convert_to_CUDA1_tic)
+
+
+                convert_to_CUDA2_tic = time.time()
+                if (torch.cuda.is_available()):
+                    x_var = x_var.cuda()
+                    y_var = y_var.cuda()
+                convert_to_CUDA2_time += (time.time() - convert_to_CUDA2_tic)
 
                 forward_time_tic = time.time()
                 scores = self.model(x_var)
@@ -72,7 +80,8 @@ class Train(object):
                 read_data_tic = time.time()
             print('Epoch done in t={:0.1f}s'.format(time.time() - tic))
             print('Reading data time t={:0.1f}s'.format(read_data_time))
-            print('Convert to CUDA t={:0.1f}s'.format(convert_to_CUDA_time))
+            print('Convert to Variable t={:0.1f}s'.format(convert_to_CUDA1_time))
+            print('Convert to CUDA t={:0.1f}s'.format(convert_to_CUDA1_time))
             print('Forward time t={:0.1f}s'.format(forward_time))
             print('Backward time t={:0.1f}s'.format(backward_time))
             self.save_model()

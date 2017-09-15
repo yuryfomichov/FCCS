@@ -25,7 +25,6 @@ class DatasetLoader(object):
 
         loader = dataloader.DataLoader(data,
                                        batch_size=self.batch_size,
-                                       shuffle=True,
                                        num_workers=self.num_workers,
                                        drop_last=drop_last,
                                        pin_memory=torch.cuda.is_available())
