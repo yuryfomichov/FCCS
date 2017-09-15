@@ -10,7 +10,7 @@ def run():
                     create_new=True,
                     print_every=20,
                     loader_params={
-                        'batch_size': 192,
+                        'batch_size': 200,
                         'num_workers': 32 if torch.cuda.is_available() else 0
                     })
     loss_fn = nn.CrossEntropyLoss().type(network.data_type)
