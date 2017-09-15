@@ -45,22 +45,36 @@ class Train(object):
             self.model.train()
             read_data_tic = time.time()
             read_data_time = 0;
+            forward_time = 0;
+            convert_to_CUDA_time = 0;
+            backward_time = 0;
             for t, (x, y) in enumerate(self.loader.get_train_loader()):
                 read_data_time += (time.time() - read_data_tic);
+
+                convert_to_CUDA_tic = time.time()
                 x_var = Variable(x.type(self.data_type), requires_grad=False)
                 y_var = Variable(y.type(self.data_type).long())
+                convert_to_CUDA_time += (time.time() - convert_to_CUDA_tic);
+
+                forward_time_tic = time.time()
                 scores = self.model(x_var)
                 loss = loss_fn(scores, y_var)
+                forward_time += (time.time() - forward_time_tic);
 
                 if (t + 1) % self.print_every == 0:
                     print('t = %d, loss = %.4f' % (t + 1, loss.data[0]))
 
+                backward_time_tic = time.time()
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
+                backward_time += (time.time() - backward_time_tic);
                 read_data_tic = time.time()
             print('Epoch done in t={:0.1f}s'.format(time.time() - tic))
             print('Reading data time t={:0.1f}s'.format(read_data_time))
+            print('Convert to CUDA t={:0.1f}s'.format(convert_to_CUDA_time))
+            print('Forward time t={:0.1f}s'.format(forward_time_tic))
+            print('Backward time t={:0.1f}s'.format(backward_time))
             self.save_model()
             self.check_val_accuracy()
             self.check_train_accuracy()
