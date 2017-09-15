@@ -32,7 +32,7 @@ class Model(nn.Module):
         #self._require_grad_false()
 
         self.classifier = nn.Sequential(
-            nn.Linear(128 * 7 * 7, 1024),
+            nn.Linear(128 * 6 * 6, 1024),
             nn.BatchNorm1d(1024),
             nn.ReLU(True),
             nn.Linear(1024, 512),
