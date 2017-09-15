@@ -7,7 +7,7 @@ from model.train import Train
 def run():
     network = Train(data_type=torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor,
                     model_filename="model1.pt",
-                    create_new=False,
+                    create_new=True,
                     print_every=20,
                     loader_params={
                         'batch_size': 256,
