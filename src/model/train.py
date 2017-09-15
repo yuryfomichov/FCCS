@@ -57,8 +57,8 @@ class Train(object):
                 convert_to_CUDA_time += (time.time() - convert_to_CUDA_tic);
 
                 forward_time_tic = time.time()
-                scores = self.model(x_var.cuda())
-                loss = loss_fn(scores, y_var.cuda())
+                scores = self.model(x_var)
+                loss = loss_fn(scores, y_var)
                 forward_time += (time.time() - forward_time_tic)
 
                 if (t + 1) % self.print_every == 0:
