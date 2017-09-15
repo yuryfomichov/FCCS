@@ -52,14 +52,14 @@ class Train(object):
                 read_data_time += (time.time() - read_data_tic);
 
                 convert_to_CUDA_tic = time.time()
-                x_var = Variable(x, requires_grad=False).cuda(async=True)
-                y_var = Variable(y).cuda(async=True)
+                x_var = Variable(x.type(self.data_type), requires_grad=False)
+                y_var = Variable(y.type(self.data_type).long())
                 convert_to_CUDA_time += (time.time() - convert_to_CUDA_tic);
 
                 forward_time_tic = time.time()
                 scores = self.model(x_var)
                 loss = loss_fn(scores, y_var)
-                forward_time += (time.time() - forward_time_tic)
+                forward_time += (time.time() - forward_time_tic);
 
                 if (t + 1) % self.print_every == 0:
                     print('t = %d, loss = %.4f' % (t + 1, loss.data[0]))
