@@ -41,13 +41,14 @@ class Train(object):
             print('')
             print('--------------------------------------------------------------------------------------------------')
             print('Starting epoch %d / %d' % (epoch + 1, num_epochs))
+
             tic = time.time()
-            self.model.train()
             read_data_tic = time.time()
             read_data_time = 0;
             forward_time = 0;
             convert_to_CUDA_time = 0;
             backward_time = 0;
+            self.model.train()
             for t, (x, y) in enumerate(self.loader.get_train_loader()):
                 read_data_time += (time.time() - read_data_tic);
 
@@ -75,6 +76,7 @@ class Train(object):
             print('Convert to CUDA t={:0.1f}s'.format(convert_to_CUDA_time))
             print('Forward time t={:0.1f}s'.format(forward_time))
             print('Backward time t={:0.1f}s'.format(backward_time))
+
             self.save_model()
             self.check_val_accuracy()
             self.check_train_accuracy()
