@@ -52,8 +52,11 @@ class Train(object):
                 read_data_time += (time.time() - read_data_tic);
 
                 convert_to_CUDA_tic = time.time()
-                x_var = Variable(x.type(self.data_type), requires_grad=False)
-                y_var = Variable(y.type(self.data_type).long())
+                x_var = Variable(x, requires_grad=False)
+                y_var = Variable(y)
+                if (torch.cuda.is_available()):
+                    x_var = x_var.cuda(async=True)
+                    y_var = y_var.cuda(async=True)
                 convert_to_CUDA_time += (time.time() - convert_to_CUDA_tic);
 
                 forward_time_tic = time.time()
