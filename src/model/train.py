@@ -43,7 +43,10 @@ class Train(object):
             print('Starting epoch %d / %d' % (epoch + 1, num_epochs))
             tic = time.time()
             self.model.train()
+            read_data_tic = time.time()
+            read_data_time = 0;
             for t, (x, y) in enumerate(self.loader.get_train_loader()):
+                read_data_time += (time.time() - read_data_tic);
                 x_var = Variable(x.type(self.data_type), requires_grad=False)
                 y_var = Variable(y.type(self.data_type).long())
                 scores = self.model(x_var)
@@ -55,7 +58,9 @@ class Train(object):
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
+                read_data_tic = time.time()
             print('Epoch done in t={:0.1f}s'.format(time.time() - tic))
+            print('Reading data time t={:0.1f}s'.format(read_data_time))
             self.save_model()
             self.check_val_accuracy()
             self.check_train_accuracy()
