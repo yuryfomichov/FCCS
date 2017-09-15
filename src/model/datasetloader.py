@@ -48,8 +48,8 @@ class DatasetLoader(object):
 
     def input_transform(self):
         transform = transforms.Compose([
-            transforms.Scale(256),
-            transforms.RandomCrop(224),
+            transforms.Scale(152),
+            transforms.RandomCrop(128),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.485, 0.456, 0.406],
