@@ -51,27 +51,7 @@ class DatasetLoader(object):
             transforms.Scale(256),
             transforms.RandomCrop(224),
             transforms.RandomHorizontalFlip(),
-            ToCudaTensor(),
+            transforms.ToTensor(),
             transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                  std=[0.229, 0.224, 0.225])])
         return transform
-
-
-class ToCudaTensor(object):
-    """Convert a ``PIL.Image`` or ``numpy.ndarray`` to tensor.
-
-    Converts a PIL.Image or numpy.ndarray (H x W x C) in the range
-    [0, 255] to a torch.FloatTensor of shape (C x H x W) in the range [0.0, 1.0].
-    """
-
-    def __call__(self, pic):
-        img = torch.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
-        if pic.mode == 'YCbCr':
-            nchannel = 3
-        elif pic.mode == 'I;16':
-            nchannel = 1
-        else:
-            nchannel = len(pic.mode)
-        img = img.view(pic.size[1], pic.size[0], nchannel)
-        img = img.transpose(0, 1).transpose(0, 2).contiguous()
-        return img.cuda().float().div(255)
