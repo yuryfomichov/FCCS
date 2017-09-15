@@ -6,13 +6,13 @@ import math
 class Model(nn.Module):
     def __init__(self, num_classes=91):
         super(Model, self).__init__()
-        #vgg = models.vgg16(pretrained=True)
+        vgg = models.vgg16(pretrained=True)
         self.features = nn.Sequential(
-            nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1),
-            nn.BatchNorm2d(32),
+            nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2, stride=2),
-            nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),
+            nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
             nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2, stride=2),
@@ -35,10 +35,10 @@ class Model(nn.Module):
             nn.Linear(128 * 7 * 7, 1024),
             nn.BatchNorm1d(1024),
             nn.ReLU(True),
-            nn.Linear(1024, 512),
-            nn.BatchNorm1d(512),
+            nn.Linear(1024, 1024),
+            nn.BatchNorm1d(1024),
             nn.ReLU(True),
-            nn.Linear(512, num_classes),
+            nn.Linear(1024, num_classes),
         )
         self._initialize_weights()
 
