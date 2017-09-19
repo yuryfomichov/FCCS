@@ -53,9 +53,11 @@ class Train(object):
                 read_data_time += (time.time() - read_data_tic);
 
                 convert_to_CUDA_tic = time.time()
-                x_var = Variable(x.type(self.data_type), requires_grad=False)
-                y_var = Variable(y.type(self.data_type).long())
+                x, y = x.cuda(async=True), y.cuda(async=True)
                 convert_to_CUDA_time += (time.time() - convert_to_CUDA_tic);
+
+                x_var = Variable(x, requires_grad=False)
+                y_var = Variable(y.long())
 
                 forward_time_tic = time.time()
                 scores = self.model(x_var)
